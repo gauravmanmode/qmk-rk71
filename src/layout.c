@@ -1,3 +1,4 @@
+// RK71 KEYMAP
 #include "layout.h"
 #include <stdint.h>
 #include "matrix.h"
@@ -17,7 +18,7 @@
     { K00_4, K01_4, K02_4, KC_NO, KC_NO, K05_4, KC_NO, KC_NO, K08_4, K09_4, K10_4, KC_NO, KC_NO, K13_4, K14_4, KC_NO } \
 }
 
-// Each layer gets a name for readability, which is then used in the keymap matrix below.
+// Each layer gets a name for readability, which is then used in the keymap matrix below. 
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
