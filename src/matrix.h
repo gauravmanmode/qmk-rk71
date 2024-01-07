@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define MATRIX_COLS 16
+#define MATRIX_COLS 14
 #define MATRIX_ROWS 5
 
 void matrix_init();
