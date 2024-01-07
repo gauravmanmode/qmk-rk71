@@ -2,7 +2,11 @@ CC= sdcc
 ASM = sdas8051
 OBJCOPY = objcopy
 PACKIHX = packihx
-FLASHER = sinowealth-kb-tool write -p nuphy-air60
+
+# FLASHER = sinowealth-kb-tool write -p nuphy-air60
+
+# nicarran: this is a sinowealth-kb-tool fork with the royalkludge-rk61-rgb-wired option (device info as already reported on the sinowealth-kb-tool project page)
+FLASHER = sinowealth-kb-tool write -p royalkludge-rk61-rgb-wired
 
 SRCDIR = src
 OBJDIR = obj
@@ -19,8 +23,12 @@ CODE_SIZE ?= 0xf000 # 61440 bytes (leaving the remaining 4096 for bootloader)
 SMK_VERSION ?= alpha
 
 # Ease backup & restore process by keeping same vid & pid as nuphy-air60
-USB_VID ?= 0x05ac
-USB_PID ?= 0x024f
+# USB_VID ?= 0x05ac
+# USB_PID ?= 0x024f
+
+# nicarran: Royal Kludge RK61
+USB_VID ?= 0x258a
+USB_PID ?= 0x00c7
 
 CFLAGS := -V -mmcs51 --model-small \
 	--xram-size $(XRAM_SIZE) --xram-loc $(XRAM_LOC) \
