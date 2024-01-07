@@ -8,22 +8,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define C0 P5_0
-#define C1 P5_1
-#define C2 P5_2
-#define C3 P3_5
-#define C4 P3_4
-#define C5 P3_3
-#define C6 P3_2
-#define C7 P3_1
-#define C8 P3_0
-#define C9 P2_5
-#define C10 P2_4
-#define C11 P2_3
-#define C12 P2_2
-#define C13 P2_1
-#define C14 P2_0
-#define C15 P1_5
+#define C0 P6_0
+#define C1 P6_1
+#define C2 P6_2
+#define C3 P6_3
+#define C4 P6_4
+#define C5 P6_5
+#define C6 P6_6
+#define C7 P6_7
+#define C8 P5_0
+#define C9 P5_1
+#define C10 P5_2
+#define C11 P5_7
+#define C12 P4_0
+#define C13 P4_2
 
 void animation_step(uint8_t current_step);
 
@@ -67,6 +65,7 @@ void process_key_state(uint8_t row, uint8_t col, bool pressed)
         if (pressed) {
             action_layer = QK_MOMENTARY_GET_LAYER(qcode);
         } else {
+            clear_keys();
             action_layer = 0;
         }
 
@@ -158,88 +157,74 @@ uint8_t matrix_task()
 
 inline void matrix_scan_step()
 {
-    // set all rgb sinks to low (animation step will enable needed ones)
-    P0 &= ~(_P0_2 | _P0_3 | _P0_4);
-    P1 &= ~(_P1_1 | _P1_2 | _P1_3);
-    P4 &= ~(_P4_3 | _P4_4 | _P4_5 | _P4_6);
-    P5 &= ~(_P5_7);
-    P6 &= ~(_P6_1 | _P6_2 | _P6_3 | _P6_4 | _P6_5 | _P6_6 | _P6_7);
-
+    
     pwm_disable();
 
     // ignore until matrix has been read
     if (!matrix_updated) {
         // set all columns to high
-        P1 |= (uint8_t)(_P1_5);
-        P2 |= (uint8_t)(_P2_0 | _P2_1 | _P2_2 | _P2_3 | _P2_4 | _P2_5);
-        P3 |= (uint8_t)(_P3_0 | _P3_1 | _P3_2 | _P3_3 | _P3_4 | _P3_5);
-        P5 |= (uint8_t)(_P5_0 | _P5_1 | _P5_2);
+        P6 |= (uint8_t)(_P6_0 | _P6_1 | _P6_2 | _P6_3 | _P6_4 | _P6_5 | _P6_6 | _P6_7 );
+        P5 |= (uint8_t)(_P5_0 | _P5_1 | _P5_2 | _P5_7 );
+        P4 |= (uint8_t)(_P4_0 | _P4_2 );
 
         // set current (!) column to low
         switch (current_step) {
-            case 0:
-                C0 = 0;
-                break;
+        case 0:
+            C0 = 0;
+            break;
 
-            case 1:
-                C1 = 0;
-                break;
+        case 1:
+            C1 = 0;
+            break;
 
-            case 2:
-                C2 = 0;
-                break;
+        case 2:
+            C2 = 0;
+            break;
 
-            case 3:
-                C3 = 0;
-                break;
+        case 3:
+            C3 = 0;
+            break;
 
-            case 4:
-                C4 = 0;
-                break;
+        case 4:
+            C4 = 0;
+            break;
 
-            case 5:
-                C5 = 0;
-                break;
+        case 5:
+            C5 = 0;
+            break;
 
-            case 6:
-                C6 = 0;
-                break;
+        case 6:
+            C6 = 0;
+            break;
 
-            case 7:
-                C7 = 0;
-                break;
+        case 7:
+            C7 = 0;
+            break;
 
-            case 8:
-                C8 = 0;
-                break;
+        case 8:
+            C8 = 0;
+            break;
 
-            case 9:
-                C9 = 0;
-                break;
+        case 9:
+            C9 = 0;
+            break;
 
-            case 10:
-                C10 = 0;
-                break;
+        case 10:
+            C10 = 0;
+            break;
 
-            case 11:
-                C11 = 0;
-                break;
+        case 11:
+            C11 = 0;
+            break;
 
-            case 12:
-                C12 = 0;
-                break;
+        case 12:
+            C12 = 0;
+            break;
 
-            case 13:
-                C13 = 0;
-                break;
+        case 13:
+            C13 = 0;
+            break;
 
-            case 14:
-                C14 = 0;
-                break;
-
-            case 15:
-                C15 = 0;
-                break;
         }
 
         // grab key for the column state
@@ -250,24 +235,22 @@ inline void matrix_scan_step()
         // P5_4 - R4
         uint8_t column_state = (((P7 >> 1) & 0x07) | (P5 & 0x18)) | 0xe0;
 
-        // set all columns down to low
-        P1 &= (uint8_t)~(_P1_5);
-        P2 &= (uint8_t)~(_P2_0 | _P2_1 | _P2_2 | _P2_3 | _P2_4 | _P2_5);
-        P3 &= (uint8_t)~(_P3_0 | _P3_1 | _P3_2 | _P3_3 | _P3_4 | _P3_5);
-        P5 &= (uint8_t)~(_P5_0 | _P5_1 | _P5_2);
-
         matrix[current_step] = ~column_state;
+
+        // set all columns down to low
+        P6 &= (uint8_t)~(_P6_0 | _P6_1 | _P6_2 | _P6_3 | _P6_4 | _P6_5 | _P6_6 | _P6_7 );
+        P5 &= (uint8_t)~(_P5_0 | _P5_1 | _P5_2 | _P5_7 );
+        P4 &= (uint8_t)~(_P4_0 | _P4_2 );
     }
 
     // rgb led matrix animation
-    animation_step(current_step);
+    //animation_step(current_step);
+    pwm_set_all_columns(0);
 
     // move step
-    if (current_step < MATRIX_COLS - 1) {
-        current_step++;
-    } else {
-        current_step = 0;
-        matrix_updated = true;
+    if(++current_step==MATRIX_COLS){
+        current_step=0;
+        matrix_updated=true;
     }
 
     // clear pwm isr flag
@@ -276,6 +259,7 @@ inline void matrix_scan_step()
     pwm_enable();
 }
 
+// this function is currently not used
 void animation_step(uint8_t current_step)
 {
     static uint16_t current_cycle = 0;
@@ -345,3 +329,4 @@ void animation_step(uint8_t current_step)
     // set pwm duty cycles to expected colors
     pwm_set_all_columns(color_intensity);
 }
+
