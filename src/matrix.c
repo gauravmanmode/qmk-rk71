@@ -22,6 +22,8 @@
 #define C11 P5_7
 #define C12 P4_0
 #define C13 P4_2
+#define C14 P4_3
+#define C15 P4_5
 
 void animation_step(uint8_t current_step);
 
@@ -329,4 +331,3 @@ void animation_step(uint8_t current_step)
     // set pwm duty cycles to expected colors
     pwm_set_all_columns(color_intensity);
 }
-
